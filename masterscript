@@ -17,6 +17,7 @@ cd /home/$USER/
 ./masterscript
 EOF
 fi
+
 if [ ! -f remove ]; then
         cat << 'EOF' > remove
 #!/bin/bash
