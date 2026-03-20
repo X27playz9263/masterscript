@@ -15,8 +15,7 @@ nano $name.$ext
 chmod +x $name.$ext
 cd /home/$USER/
 ./masterscript
-EOF	
-
+EOF
 fi
 if [ ! -f remove ]; then
         cat << 'EOF' > remove
