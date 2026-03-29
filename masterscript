@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
-mkdir -p /home/$USER/scripts/trash
-cd /home/$USER/scripts/
+mkdir -p "$HOME/scripts/trash"
+cd "$HOME/scripts/"
 if [ ! -f new ]; then
 	cat << 'EOF' > new
 #!/bin/bash
@@ -10,10 +10,10 @@ echo "Type in the name of your new script"
 read name
 echo "Type file extension"
 read ext
-cd /home/$USER/scripts
+cd "$HOME/scripts"
 nano $name.$ext
 chmod +x $name.$ext
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -23,16 +23,16 @@ if [ ! -f remove ]; then
 #!/bin/bash
 clear
 echo "Remove a script"
-cd /home/$USER/scripts
+cd "$HOME/scripts"
 echo "Bash:"
 ls *.sh
 echo "Python:"
 ls *.py
 read remove
 echo "Deleted $remove"
-mv $remove /home/$USER/scripts/trash/
+mv $remove "$HOME/scripts/trash/"
 sleep 1
-cd /home/$USER
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -41,7 +41,7 @@ if [ ! -f edit ]; then
         cat << 'EOF' > edit
 #!/bin/bash
 clear
-cd /home/$USER/scripts/
+cd "$HOME/scripts/"
 echo "Type the file you want to edit"
 echo "Bash:"
 ls *.sh
@@ -49,7 +49,7 @@ echo "Python:"
 ls *.py
 read file
 nano $file
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -58,18 +58,18 @@ if [ ! -f restore ]; then
         cat << 'EOF' > restore
 #!/bin/bash
 clear
-cd /home/$USER
+cd "$HOME"
 echo "Type the item you want to restore"
-ls scripts/trash/
+ls "$HOME/scripts/trash"
 read item
 if [ "$item" == "erase" ]; then
         ./scripts/erase
 else
-        mv scripts/trash/$item scripts/
+        mv "$HOME/scripts/trash/$item scripts/"
         echo "$item restored"
 fi
 sleep 2
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -77,7 +77,7 @@ fi
 if [ ! -f erase ]; then
         cat << 'EOF' > erase
 #!/bin/bash
-cd /home/$USER/scripts/trash
+cd "$HOME/scripts/trash"
 ls
 echo "Are you sure you want to delete everything in /trash?
 [type Yes to delete or anything else to exit]"
@@ -89,7 +89,7 @@ else
         echo "No files were deleted."
 fi
 sleep 2
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -106,7 +106,7 @@ echo "To make a new script, type 'new' [Don't forget #!/bin/bash !]"
 echo "To edit a script, type 'edit'"
 echo "To go back to masterscript, press enter"
 read confirm
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
 EOF
 fi
@@ -114,7 +114,7 @@ fi
 chmod +x *
 echo "run 'help' for instructions"
 echo "You are currently logged in as $USER on $HOSTNAME"
-cd /home/$USER/scripts
+cd "$HOME/scripts"
 echo "$PWD"
 echo "Type the script's name to open it"
 echo "Bash:"
@@ -139,5 +139,6 @@ else
 	./$program
 fi
 sleep 2
-cd /home/$USER/
+cd "$HOME"
 ./masterscript
+
