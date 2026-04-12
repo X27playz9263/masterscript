@@ -1,84 +1,70 @@
 #!/bin/bash
-clear
 mkdir -p "$HOME/scripts/trash"
 cd "$HOME/scripts/"
-if [ ! -f new ]; then
-	cat << 'EOF' > new
+cat << 'EOF' > new
 #!/bin/bash
 clear
+cd "$HOME/scripts"
 echo "Type in the name of your new script"
 read name
 echo "Type file extension"
 read ext
-cd "$HOME/scripts"
-nano $name.$ext
-chmod +x $name.$ext
-cd "$HOME"
-./masterscript
+echo "Choose your editor:"
+read editor
+"$editor" "$name.$ext"
+chmod +x "$name.$ext"
 EOF
-fi
 
-if [ ! -f remove ]; then
-        cat << 'EOF' > remove
+cat << 'EOF' > remove
 #!/bin/bash
 clear
 echo "Remove a script"
 cd "$HOME/scripts"
 echo "Bash:"
-ls *.sh
+ls *.sh 2>/dev/null
 echo "Python:"
-ls *.py
+ls *.py 2>/dev/null
 read remove
-echo "Deleted $remove"
-mv $remove "$HOME/scripts/trash/"
+echo "Moved $remove to /scripts/trash/"
+mv "$remove" "$HOME/scripts/trash/"
 sleep 1
-cd "$HOME"
-./masterscript
 EOF
-fi
 
-if [ ! -f edit ]; then
-        cat << 'EOF' > edit
+cat << 'EOF' > edit
 #!/bin/bash
 clear
 cd "$HOME/scripts/"
 echo "Type the file you want to edit"
 echo "Bash:"
-ls *.sh
+ls *.sh 2>/dev/null
 echo "Python:"
-ls *.py
+ls *.py 2>/dev/null
 read file
-nano $file
-cd "$HOME"
-./masterscript
+echo "Choose your editor:"
+read editor
+"$editor" "$file"
 EOF
-fi
 
-if [ ! -f restore ]; then
-        cat << 'EOF' > restore
+cat << 'EOF' > restore
 #!/bin/bash
 clear
 cd "$HOME"
 echo "Type the item you want to restore"
-ls "$HOME/scripts/trash"
+ls "$HOME/scripts/trash" 2>/dev/null
 read item
 if [ "$item" == "erase" ]; then
         ./scripts/erase
 else
-        mv "$HOME/scripts/trash/$item scripts/"
+        mv "$HOME/scripts/trash/$item" "$HOME/scripts"
         echo "$item restored"
 fi
 sleep 2
-cd "$HOME"
-./masterscript
 EOF
-fi
 
-if [ ! -f erase ]; then
-        cat << 'EOF' > erase
+cat << 'EOF' > erase
 #!/bin/bash
 cd "$HOME/scripts/trash"
-ls
+ls 2>/dev/null
 echo "Are you sure you want to delete everything in /trash?
 [type Yes to delete or anything else to exit]"
 read confirm
@@ -89,56 +75,49 @@ else
         echo "No files were deleted."
 fi
 sleep 2
-cd "$HOME"
-./masterscript
 EOF
-fi
 
-if [ ! -f help ]; then
-        cat << 'EOF' > help
+cat << 'EOF' > help
 #!/bin/bash
 clear
 echo "To run a script using Masterscript, type in the name of the script [example = script.sh]"
-echo "To remove a script from the folder, type 'remove', this wll move it to a trash folder /scripts/trash"
+echo "To remove a script from the folder, type 'remove', this will move it to a trash folder /scripts/trash"
 echo "To restore a script from trash, type 'restore'"
 echo "To erase the trash folder,  'type erase'"
-echo "To make a new script, type 'new' [Don't forget #!/bin/bash !]"
+echo "To make a new script, type 'new' (Don't forget #!/bin/bash !)"
 echo "To edit a script, type 'edit'"
-echo "To go back to masterscript, press enter"
-read confirm
-cd "$HOME"
-./masterscript
+read -p "To go back to masterscript, press enter {"
 EOF
-fi
 
-chmod +x *
-echo "run 'help' for instructions"
-echo "You are currently logged in as $USER on $HOSTNAME"
-cd "$HOME/scripts"
-echo "$PWD"
-echo "Type the script's name to open it"
-echo "Bash:"
-ls *.sh
-echo "Python:"
-ls *.py
-read program
-if [[ $program == *.py ]]; then
-	echo "Launching $program..."
-	sleep 1
+while true; do
 	clear
-	python3 $program
-elif [[ $program == *.sh ]]; then
-	echo "Launching $program..."
-	sleep 1
-	clear
-	./$program
-elif [[ $program == "exit" ]]; then
-	echo "Exiting masterscript..."
-	exit 1
-else
-	./$program
-fi
-sleep 2
-cd "$HOME"
-./masterscript
-
+	neofetch
+	chmod +x *
+	echo "run 'help' for instructions"
+	echo "You are currently logged in as $USER on $HOSTNAME"
+	cd "$HOME/scripts"
+	echo "$PWD"
+	echo "Type the script's name to open it"
+	echo "Bash:"
+	ls *.sh 2>/dev/null
+	echo "Python:"
+	ls *.py 2>/dev/null
+	read program
+	if [[ $program == *.py ]]; then
+		echo "Launching $program..."
+		sleep 1
+		clear
+		python3 "$program"
+	elif [[ $program == *.sh ]]; then
+		echo "Launching $program..."
+		sleep 1
+		clear
+		./"$program"
+	elif [[ $program == "exit" ]]; then
+		echo "Exiting masterscript..."
+		sleep 1
+		break
+	else
+		./"$program"
+	fi
+done
